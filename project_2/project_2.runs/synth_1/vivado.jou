@@ -2,11 +2,11 @@
 # Vivado v2019.1 (64-bit)
 # SW Build 2552052 on Fri May 24 14:49:42 MDT 2019
 # IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
-# Start of session at: Tue Nov  9 15:48:49 2021
-# Process ID: 8608
+# Start of session at: Tue Nov  9 16:57:35 2021
+# Process ID: 6880
 # Current directory: C:/Users/electro/Documents/GitHub/tutorat_CNP/project_2/project_2.runs/synth_1
-# Command line: vivado.exe -log ALU.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source ALU.tcl
-# Log file: C:/Users/electro/Documents/GitHub/tutorat_CNP/project_2/project_2.runs/synth_1/ALU.vds
+# Command line: vivado.exe -log REG.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source REG.tcl
+# Log file: C:/Users/electro/Documents/GitHub/tutorat_CNP/project_2/project_2.runs/synth_1/REG.vds
 # Journal file: C:/Users/electro/Documents/GitHub/tutorat_CNP/project_2/project_2.runs/synth_1\vivado.jou
 #-----------------------------------------------------------
-source ALU.tcl -notrace
+source REG.tcl -notrace
