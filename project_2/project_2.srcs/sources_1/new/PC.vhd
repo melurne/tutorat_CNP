@@ -37,16 +37,16 @@ use work.constants.all;
 
 entity PC is
     Port ( RAM_ALU_out : in STD_LOGIC_VECTOR (word_size-1 downto 0);
-           inst_value : in STD_LOGIC_VECTOR (word_size-1 downto 0);
            reset : in STD_LOGIC;
            clk : in STD_LOGIC;
            halt : in STD_LOGIC;
-           selector : in STD_LOGIC_VECTOR (1 downto 0);
-           sortie : out STD_LOGIC_VECTOR (word_size-1 downto 0));
+           f_jmp : in std_logic;
+           sortie : out STD_LOGIC_VECTOR (addr_size-1 downto 0));
 end PC;
 
 architecture Behavioral of PC is
-signal pc : std_logic_vector (word_size-1 downto 0);
+signal pc : std_logic_vector (addr_size-1 downto 0);
+signal selector : std_logic_vector(1 downto 0);
 begin
 
 process (clk, reset)
@@ -55,19 +55,18 @@ begin
         sortie <= prog_start; -- addresse de debut du programme
     end if;
     if clk = '1' and clk'event then 
-        if halt = '0' then
-            case selector is
-                when "10" =>
-                    pc <= RAM_ALU_out;
-                when "00" =>
-                    pc <= std_logic_vector(unsigned(pc) + 1);
-                when "01" =>
-                    pc <= inst_value;
-                when others =>
-            end case;
-        end if;
+        case selector is
+            when "10" =>
+                pc <= std_logic_vector(to_unsigned(to_integer(unsigned(RAM_ALU_out)), addr_size));
+            when "00" =>
+                pc <= std_logic_vector(unsigned(pc) + 1);
+            when "01" =>
+            when others =>
+        end case;
     end if;
 end process;
+
+selector <= f_jmp & halt;
 
 sortie <= pc;
 

@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 09.11.2021 14:57:12
+-- Create Date: 09.11.2021 16:35:16
 -- Design Name: 
--- Module Name: constants - Behavioral
+-- Module Name: REG - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -21,6 +21,10 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use ieee.numeric_std.all;
+
+library work;
+use work.constants.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -31,21 +35,17 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-package constants is
-    constant constHALT: integer := 0;
-    constant constADD: integer := 1;
-    constant constSUB: integer := 2;
-    constant constXOR: integer := 3;
-    constant constOR: integer := 4;
-    constant constAND: integer := 5;
-    constant constJMP: integer := 6;
-    constant constJMPZ: integer := 7;
-    constant constJMPNZ: integer := 8;
-    constant constLOAD: integer := 9;
-    constant constSTORE: integer := 10;
+entity ROM is
+    Port ( data_out : out STD_LOGIC_VECTOR (21 downto 0);
+           addr_read : in STD_LOGIC_VECTOR (addr_size-1 downto 0));
 
-    
-    constant addr_size: integer := 4;
-    constant word_size: integer := 8;
-    constant prog_start: std_logic_vector(addr_size-1 downto 0) := "0010";
-end constants;
+end ROM;
+
+architecture Behavioral of ROM is
+type regs is array (0 to 2**addr_size - 1) of std_logic_vector(21 downto 0);
+signal ram_bank : regs;
+begin
+
+data_out <= ram_bank(to_integer(unsigned(addr_read)));
+
+end Behavioral;

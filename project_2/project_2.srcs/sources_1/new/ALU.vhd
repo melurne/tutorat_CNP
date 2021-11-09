@@ -43,12 +43,12 @@ entity ALU is
            op : in integer; -- (NOP, ADD, SUB, XOR, AND, OR, JMP, *)
            f_zero : out STD_LOGIC;
            f_over : out STD_LOGIC;
-           f_neg : out STD_LOGIC);
+           f_neg : out STD_LOGIC;
+           f_jmp : out STD_LOGIC);
 end ALU;
 
 architecture Behavioral of ALU is
 signal pre_sortie : std_logic_vector (word_size-1 downto 0);
-signal resZ, resNZ : std_logic_vector (word_size-1 downto 0);
 begin
 with op select 
     pre_sortie <= std_logic_vector(unsigned(A) + unsigned(B)) when constADD,  -- ADD
@@ -57,16 +57,15 @@ with op select
               A and B when constAND,                                      -- AND
               A or B when constOR,                                       -- OR
               B when constJMP,                                            -- JMP
-              resZ when constJMPZ,
-              resNZ when constJMPNZ,
+              B when constJMPZ,
+              B when constJMPNZ,
               B when constLOAD,
               B when constSTORE,
               (pre_sortie'range => '0') when constHALT,
               (pre_sortie'range => '0') when others;
            
-           
-resZ <= B when (A = (A'range => '0')) else (others => '0');
-resNZ <= (others => '0') when (A = (A'range => '0')) else B;
+   
+f_jmp <= '1' when (op=constJMP or (op=constJMPZ AND A = (A'range => '0')) or (op=constJMPNZ AND A /= (A'range => '0'))) else '0';   
 
 Sortie <= pre_sortie;   
 
