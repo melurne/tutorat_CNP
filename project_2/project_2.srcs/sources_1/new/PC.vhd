@@ -52,7 +52,7 @@ begin
 process (clk, reset)
 begin
     if reset = '1' then
-        sortie <= prog_start; -- addresse de debut du programme
+        pc <= prog_start; -- addresse de debut du programme
     end if;
     if clk = '1' and clk'event then 
         case selector is

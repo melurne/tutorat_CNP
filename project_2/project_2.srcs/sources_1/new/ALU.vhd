@@ -61,6 +61,7 @@ with op select
               B when constJMPNZ,
               B when constLOAD,
               B when constSTORE,
+              B when constLDI,
               (pre_sortie'range => '0') when constHALT,
               (pre_sortie'range => '0') when others;
            

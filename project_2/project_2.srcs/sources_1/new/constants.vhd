@@ -43,6 +43,7 @@ package constants is
     constant constJMPNZ: integer := 8;
     constant constLOAD: integer := 9;
     constant constSTORE: integer := 10;
+    constant constLDI: integer := 11;
 
     
     constant addr_size: integer := 4;

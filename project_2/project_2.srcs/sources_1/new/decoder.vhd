@@ -143,6 +143,12 @@ begin
                 WE_ram <= '1';
                 RE_ram  <= '0';
                 addr_ram <= dest;
+            when constLDI =>
+                f_halt <= '0';
+                WE_reg <= '1';
+                WE_ram <= '0';
+                RE_ram  <= '0';
+                addr_ram <= dest;
             when others => 
                 f_halt <= '1';
                 WE_reg <= '0';

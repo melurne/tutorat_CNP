@@ -37,10 +37,12 @@ use work.constants.all;
 
 entity CPU is
     Port ( 
+        CLK100MHZ: in std_logic;
         reset : in std_logic;
         f_zero : out STD_LOGIC;
         f_neg : out STD_LOGIC;
-        f_over : out STD_LOGIC
+        f_over : out STD_LOGIC;
+        pc_mes : out std_logic_vector(addr_size-1 downto 0)
     );
 end CPU;
 
@@ -50,7 +52,7 @@ component ALU is
     Port ( A : in STD_LOGIC_VECTOR (word_size-1 downto 0);
            B : in STD_LOGIC_VECTOR (word_size-1 downto 0);
            Sortie : out STD_LOGIC_VECTOR (word_size-1 downto 0);
-           op : in integer; -- (NOP, ADD, SUB, XOR, AND, OR, JMP, *)
+           op : in integer;
            f_zero : out STD_LOGIC;
            f_over : out STD_LOGIC;
            f_neg : out STD_LOGIC;
@@ -110,12 +112,13 @@ component PC is
            sortie : out STD_LOGIC_VECTOR (addr_size-1 downto 0));
 end component;
 
-signal clk : std_logic;
 signal f_halt, f_jmp, WE_reg, WE_ram, RE_ram, f_imediate : std_logic;
-signal RAM_ALU_out, ALU_A, ALU_B, REG_B, imediate : std_logic_vector(word_size-1 downto 0);
-signal op : integer;
+signal RAM_ALU_out, ALU_A, ALU_B, REG_B, imediate, ALU_out, RAM_out : std_logic_vector(word_size-1 downto 0);
+signal op : integer := 0;
+signal cpt: integer := 0;
 signal instruction : std_logic_vector(21 downto 0);
 signal PC_out, addr_reg_A, addr_reg_B, addr_reg_IN, addr_ram : std_logic_vector(addr_size-1 downto 0);
+signal clk: std_logic;
 
 begin
 PROG_ROM : ROM port map (
@@ -160,7 +163,7 @@ pc_comp : PC port map (
 );
 
 ram_comp : RAM port map (
-    data_out => RAM_ALU_out,
+    data_out => RAM_out,
     data_in => RAM_ALU_out,
     addr => addr_ram,
     write_enable => WE_ram,
@@ -171,7 +174,7 @@ ram_comp : RAM port map (
 alu_comp : ALU port map (
     A => ALU_A,
     B => ALU_B,
-    sortie => RAM_ALU_out,
+    sortie => ALU_out,
     f_jmp => f_jmp,
     f_zero => f_zero,
     f_neg => f_neg,
@@ -180,6 +183,20 @@ alu_comp : ALU port map (
 );
 
 ALU_B <= REG_B when f_imediate = '0' else imediate;
+RAM_ALU_out <= RAM_out when RE_ram = '1' else ALU_out;
 
+pc_mes <= PC_out;
+
+clkDivider : process(CLK100MHZ)
+begin
+    if CLK100MHZ='1' and CLK100MHZ'event then
+        if cpt >= 50000 then
+            clk <= not clk;
+            cpt <= 0;
+        else 
+            cpt <= cpt+1;
+        end if ;
+    end if;
+end process;
 
 end Behavioral;

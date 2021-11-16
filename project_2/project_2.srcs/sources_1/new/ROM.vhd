@@ -46,6 +46,11 @@ type regs is array (0 to 2**addr_size - 1) of std_logic_vector(21 downto 0);
 signal ram_bank : regs;
 begin
 
+ram_bank(2) <= "0000000110000000001011"; -- LDI R0 1
+ram_bank(3) <= "0000001010000000101011"; -- LDI R1 2
+ram_bank(4) <= "0000000100000001000001"; -- ADD R2 R1 R0
+ram_bank(5) <= "0000000000000000000000"; -- HALT
+
 data_out <= ram_bank(to_integer(unsigned(addr_read)));
 
 end Behavioral;
