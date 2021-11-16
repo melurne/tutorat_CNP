@@ -38,9 +38,10 @@ use work.constants.all;
 entity RAM is
     Port ( data_out : out STD_LOGIC_VECTOR (word_size-1 downto 0);
            data_in : in STD_LOGIC_VECTOR (word_size-1 downto 0);
-           addr_read : in STD_LOGIC_VECTOR (addr_size-1 downto 0);
-           addr_write : in STD_LOGIC_VECTOR (addr_size-1 downto 0);
+           addr : in STD_LOGIC_VECTOR (addr_size-1 downto 0);
+           --addr_write : in STD_LOGIC_VECTOR (addr_size-1 downto 0);
            write_enable : in STD_LOGIC;
+           read_enable : in STD_LOGIC;
            clk : in STD_LOGIC);
 end RAM;
 
@@ -53,9 +54,9 @@ process(clk)
 begin
 if clk='1' and clk'event then
     if write_enable = '1' then
-        ram_bank(to_integer(unsigned(addr_write))) <= data_in;
-    else
-        data_out <= ram_bank(to_integer(unsigned(addr_read)));
+        ram_bank(to_integer(unsigned(addr))) <= data_in;
+    elsif read_enable = '1' then
+        data_out <= ram_bank(to_integer(unsigned(addr)));
     end if;
 end if;
 end process;

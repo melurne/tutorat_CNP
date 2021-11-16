@@ -17,9 +17,6 @@ proc create_report { reportName command } {
     send_msg_id runtcl-5 warning "$msg"
   }
 }
-set_param synth.incrementalSynthesisCache C:/Users/electro/AppData/Roaming/Xilinx/Vivado/.Xil/Vivado-5672-WIN10-TP/incrSyn
-set_msg_config -id {Synth 8-256} -limit 10000
-set_msg_config -id {Synth 8-638} -limit 10000
 create_project -in_memory -part xc7k70tfbv676-1
 
 set_param project.singleFileAddWarning.threshold 0
@@ -29,10 +26,17 @@ set_property webtalk.parent_dir C:/Users/electro/Documents/GitHub/tutorat_CNP/pr
 set_property parent.project_path C:/Users/electro/Documents/GitHub/tutorat_CNP/project_2/project_2.xpr [current_project]
 set_property default_lib xil_defaultlib [current_project]
 set_property target_language Verilog [current_project]
+set_property ip_output_repo c:/Users/electro/Documents/GitHub/tutorat_CNP/project_2/project_2.cache/ip [current_project]
 set_property ip_cache_permissions {read write} [current_project]
 read_vhdl -library xil_defaultlib {
   C:/Users/electro/Documents/GitHub/tutorat_CNP/project_2/project_2.srcs/sources_1/new/constants.vhd
+  C:/Users/electro/Documents/GitHub/tutorat_CNP/project_2/project_2.srcs/sources_1/new/ALU.vhd
   C:/Users/electro/Documents/GitHub/tutorat_CNP/project_2/project_2.srcs/sources_1/new/PC.vhd
+  C:/Users/electro/Documents/GitHub/tutorat_CNP/project_2/project_2.srcs/sources_1/new/RAM.vhd
+  C:/Users/electro/Documents/GitHub/tutorat_CNP/project_2/project_2.srcs/sources_1/new/REG.vhd
+  C:/Users/electro/Documents/GitHub/tutorat_CNP/project_2/project_2.srcs/sources_1/new/ROM.vhd
+  C:/Users/electro/Documents/GitHub/tutorat_CNP/project_2/project_2.srcs/sources_1/new/decoder.vhd
+  C:/Users/electro/Documents/GitHub/tutorat_CNP/project_2/project_2.srcs/sources_1/new/CPU.vhd
 }
 # Mark all dcp files as not used in implementation to prevent them from being
 # stitched into the results of this synthesis run. Any black boxes in the
@@ -45,12 +49,12 @@ foreach dcp [get_files -quiet -all -filter file_type=="Design\ Checkpoint"] {
 set_param ips.enableIPCacheLiteLoad 1
 close [open __synthesis_is_running__ w]
 
-synth_design -top PC -part xc7k70tfbv676-1
+synth_design -top CPU -part xc7k70tfbv676-1
 
 
 # disable binary constraint mode for synth run checkpoints
 set_param constraints.enableBinaryConstraints false
-write_checkpoint -force -noxdef PC.dcp
-create_report "synth_1_synth_report_utilization_0" "report_utilization -file PC_utilization_synth.rpt -pb PC_utilization_synth.pb"
+write_checkpoint -force -noxdef CPU.dcp
+create_report "synth_1_synth_report_utilization_0" "report_utilization -file CPU_utilization_synth.rpt -pb CPU_utilization_synth.pb"
 file delete __synthesis_is_running__
 close [open __synthesis_is_complete__ w]

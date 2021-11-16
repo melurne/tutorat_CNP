@@ -57,7 +57,7 @@ begin
     if clk = '1' and clk'event then 
         case selector is
             when "10" =>
-                pc <= std_logic_vector(to_unsigned(to_integer(unsigned(RAM_ALU_out)), addr_size));
+                pc <= RAM_ALU_out(addr_size-1 downto 0);
             when "00" =>
                 pc <= std_logic_vector(unsigned(pc) + 1);
             when "01" =>
