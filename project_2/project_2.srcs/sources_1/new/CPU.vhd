@@ -115,6 +115,16 @@ component PC is
            sortie : out STD_LOGIC_VECTOR (addr_size-1 downto 0));
 end component;
 
+component ila_0 IS
+PORT (
+clk : IN STD_LOGIC;
+    probe0 : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
+    probe1 : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+    probe2 : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+    probe3 : IN STD_LOGIC_VECTOR(7 DOWNTO 0)
+);
+END component;
+
 signal f_halt, f_jmp, WE_reg, WE_ram, RE_ram, f_imediate : std_logic;
 signal RAM_ALU_out, ALU_A, ALU_B, REG_B, imediate, ALU_out, RAM_out : std_logic_vector(word_size-1 downto 0);
 signal op : integer := 0;
@@ -124,6 +134,14 @@ signal PC_out, addr_reg_A, addr_reg_B, addr_reg_IN, addr_ram : std_logic_vector(
 signal clk: std_logic;
 
 begin
+ila : ila_0 port map (
+    clk => clk,
+    probe0 => PC_out,
+    probe1 => ALU_out,
+    probe2 => ALU_A,
+    probe3 => ALU_B
+);
+
 PROG_ROM : ROM port map (
     addr_read => PC_out,
     data_out => instruction

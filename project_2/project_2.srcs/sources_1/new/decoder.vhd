@@ -82,81 +82,69 @@ addr_reg_A <= src1;
 addr_reg_B <= addr_src2;
 addr_reg_IN <= dest;
 
-process (clk)
-begin
-    if clk = '1' and clk'event then
-        case op is
-            when constHALT =>
-                f_halt <= '1';
-                WE_reg <= '0';
-                WE_ram <= '0';
-                RE_ram  <= '0';
-            when constADD =>
-                f_halt <= '0';
-                WE_reg <= '1';
-                WE_ram <= '0';
-                RE_ram  <= '0';
-            when constSUB =>
-                f_halt <= '0';
-                WE_reg <= '1';
-                WE_ram <= '0';
-                RE_ram  <= '0';
-            when constXOR =>
-                f_halt <= '0';
-                WE_reg <= '1';
-                WE_ram <= '0';
-                RE_ram  <= '0';
-            when constOR =>
-                f_halt <= '0';
-                WE_reg <= '1';
-                WE_ram <= '0';
-                RE_ram  <= '0';
-            when constAND =>
-                f_halt <= '0';
-                WE_reg <= '1';
-                WE_ram <= '0';
-                RE_ram  <= '0';
-            when constJMP =>
-                f_halt <= '0';
-                WE_reg <= '0';
-                WE_ram <= '0';
-                RE_ram  <= '0';
-            when constJMPZ =>
-                f_halt <= '0';
-                WE_reg <= '0';
-                WE_ram <= '0';
-                RE_ram  <= '0';
-            when constJMPNZ =>
-                f_halt <= '0';
-                WE_reg <= '0';
-                WE_ram <= '0';
-                RE_ram  <= '0';
-            when constLOAD =>
-                f_halt <= '0';
-                WE_reg <= '1';
-                WE_ram <= '0';
-                RE_ram  <= '1';
-                addr_ram <= addr_src2;
-            when constSTORE =>
-                f_halt <= '0';
-                WE_reg <= '0';
-                WE_ram <= '1';
-                RE_ram  <= '0';
-                addr_ram <= dest;
-            when constLDI =>
-                f_halt <= '0';
-                WE_reg <= '1';
-                WE_ram <= '0';
-                RE_ram  <= '0';
-                addr_ram <= dest;
-            when others => 
-                f_halt <= '1';
-                WE_reg <= '0';
-                WE_ram <= '0';
-                RE_ram  <= '0';
-        end case;
-    end if;
-end process;
-
+with op select f_halt <=
+    '1' when constHALT,
+    '0' when constADD,
+    '0' when constSUB,
+    '0' when constXOR,
+    '0' when constAND,
+    '0' when constOR,
+    '0' when constJMP,
+    '0' when constJMPZ,
+    '0' when constJMPNZ,
+    '0' when constLOAD,
+    '0' when constSTORE,
+    '0' when constLDI,
+    '1' when others;
+    
+with op select WE_reg <=
+    '0' when constHALT,
+    '1' when constADD,
+    '1' when constSUB,
+    '1' when constXOR,
+    '1' when constAND,
+    '1' when constOR,
+    '0' when constJMP,
+    '0' when constJMPZ,
+    '0' when constJMPNZ,
+    '0' when constLOAD,
+    '0' when constSTORE,
+    '1' when constLDI,
+    '0' when others;
+    
+with op select WE_ram <=
+    '0' when constHALT,
+    '0' when constADD,
+    '0' when constSUB,
+    '0' when constXOR,
+    '0' when constAND,
+    '0' when constOR,
+    '0' when constJMP,
+    '0' when constJMPZ,
+    '0' when constJMPNZ,
+    '0' when constLOAD,
+    '1' when constSTORE,
+    '0' when constLDI,
+    '0' when others;
+    
+with op select RE_ram <=
+    '0' when constHALT,
+    '0' when constADD,
+    '0' when constSUB,
+    '0' when constXOR,
+    '0' when constAND,
+    '0' when constOR,
+    '0' when constJMP,
+    '0' when constJMPZ,
+    '0' when constJMPNZ,
+    '1' when constLOAD,
+    '0' when constSTORE,
+    '0' when constLDI,
+    '0' when others;
+ 
+with op select addr_ram <=
+    addr_src2 when constLOAD,
+    dest when constSTORE,
+    dest when others;
 
 end Behavioral;
