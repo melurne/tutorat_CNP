@@ -60,8 +60,8 @@ begin
                 pc <= RAM_ALU_out(addr_size-1 downto 0);
             when "00" =>
                 pc <= std_logic_vector(unsigned(pc) + 1);
-            when "01" =>
-            when others =>
+            when "01" => pc <= pc;
+            when others => pc <= pc;
         end case;
     end if;
 end process;

@@ -42,7 +42,10 @@ entity CPU is
         f_zero : out STD_LOGIC;
         f_neg : out STD_LOGIC;
         f_over : out STD_LOGIC;
-        pc_mes : out std_logic_vector(addr_size-1 downto 0)
+        pc_mes : out std_logic_vector(addr_size-1 downto 0);
+        clk_mes : out std_logic;
+        ALU_mes : out std_logic_vector(word_size-1 downto 0);
+        WE_reg_mes : out std_logic
     );
 end CPU;
 
@@ -186,11 +189,14 @@ ALU_B <= REG_B when f_imediate = '0' else imediate;
 RAM_ALU_out <= RAM_out when RE_ram = '1' else ALU_out;
 
 pc_mes <= PC_out;
+clk_mes <= clk;
+ALU_mes <= ALU_A;
+WE_reg_mes <= WE_reg;
 
 clkDivider : process(CLK100MHZ)
 begin
     if CLK100MHZ='1' and CLK100MHZ'event then
-        if cpt >= 50000 then
+        if cpt >= 50000000 then
             clk <= not clk;
             cpt <= 0;
         else 
